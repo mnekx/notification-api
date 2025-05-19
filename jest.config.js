@@ -3,8 +3,9 @@ module.exports = {
 	testEnvironment: "node",
 	testMatch: ["**/__tests__/**/*.test.ts"],
 	moduleFileExtensions: ["ts", "js"],
-	roots: ["<rootDir>/src", "<rootDir>/__tests__"],
+	roots: ["<rootDir>/src"],
 	collectCoverage: true,
 	coverageDirectory: "coverage",
 	collectCoverageFrom: ["src/**/*.ts"],
+	verbose: false,
 };
