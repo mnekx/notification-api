@@ -3,7 +3,7 @@
   "networkMode": "awsvpc",
   "containerDefinitions": [
     {
-      "name": "notification-app",
+      "name": "notification-container",
       "image": "436471025548.dkr.ecr.eu-north-1.amazonaws.com/notification-app:latest",
       "essential": true,
       "portMappings": [
