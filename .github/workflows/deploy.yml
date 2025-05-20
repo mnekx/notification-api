@@ -10,9 +10,10 @@ on:
 
 jobs:
   deploy:
-    name: Deploy to ECS
+    name: Deploy to Amazon ECS
     runs-on: ubuntu-latest
     environment: deploy-env
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -28,15 +29,26 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Build, tag, and push image to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }} # e.g., 123456789012.dkr.ecr.eu-north-1.amazonaws.com
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }} # e.g., notification-app
         run: |
-          docker build -t notification-app .
-          docker tag notification-app:latest 436471025548.dkr.ecr.eu-north-1.amazonaws.com/notification-app
-          docker push 436471025548.dkr.ecr.eu-north-1.amazonaws.com/notification-app
+          docker build -t $ECR_REPOSITORY .
+          docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: render-container
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ecs-task-def.json
+          container-name: notification-container
+          image: ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}
 
       - name: Deploy to Amazon ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: ecs-task-def.json
+          task-definition: ${{ steps.render-container.outputs.task-definition }}
           service: notification-service
           cluster: notification-cluster
           wait-for-service-stability: true
