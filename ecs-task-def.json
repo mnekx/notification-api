@@ -1,0 +1,24 @@
+{
+  "family": "notification-task",
+  "networkMode": "awsvpc",
+  "containerDefinitions": [
+    {
+      "name": "notification-app",
+      "image": "436471025548.dkr.ecr.eu-north-1.amazonaws.com/notification-app:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 3000,
+          "hostPort": 3000,
+          "protocol": "tcp"
+        }
+      ]
+    }
+  ],
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "256",
+  "memory": "512",
+  "executionRoleArn": "arn:aws:iam::436471025548:role/ecsTaskExecutionRole"
+}
