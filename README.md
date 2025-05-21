@@ -1,39 +1,10 @@
 <a name="readme-top"></a>
 
-<!--
-!!! IMPORTANT !!!
-This README is an example of how you could professionally present your codebase. 
-Writing documentation is a crucial part of your work as a professional software developer and cannot be ignored. 
-
-You should modify this file to match your project and remove sections that don't apply.
-
-REQUIRED SECTIONS:
-- Table of Contents
-- About the Project
-  - Built With
-  - Live Demo
-- Getting Started
-- Authors
-- Future Features
-- Contributing
-- Show your support
-- Acknowledgements
-- License
-
-OPTIONAL SECTIONS:
-- FAQ
-
-After you're finished please remove all the comments and instructions!
-
-For more information on the importance of a professional README for your repositories: https://github.com/microverseinc/curriculum-transversal-skills/blob/main/documentation/articles/readme_best_practices.md
--->
-
 <div align="center">
-  <!-- You are encouraged to replace this logo with your own! Otherwise you can also remove it. -->
 <!--   <img src="murple_logo.png" alt="logo" width="140"  height="auto" /> -->
   <br/>
 
-  <h3><b>Notifications API README</b></h3>
+  <h3><b>Notifications API</b></h3>
 
 </div>
 
@@ -57,30 +28,29 @@ For more information on the importance of a professional README for your reposit
 - [🔭 Future Features](#future-features)
 - [🤝 Contributing](#contributing)
 - [⭐️ Show your support](#support)
-- [🙏 Acknowledgements](#acknowledgements)
-- [❓ FAQ (OPTIONAL)](#faq)
+- [❓ FAQ](#faq)
 - [📝 License](#license)
 
 <!-- PROJECT DESCRIPTION -->
 
-# 📖 [your_project_name] <a name="about-project"></a>
+# 📖 [notifications-api] <a name="about-project"></a>
 
-> Describe your project in 1 or 2 sentences.
+<!-- > The notifications API is a service that aims at providing notification services to any application (Mobile, Web etc) -->
 
-**[your_project__name]** is a...
+**[notifications-api]** The notifications API is a service that aims at providing notification services to any application (Mobile, Web etc)
 
 ## 🛠 Built With <a name="built-with"></a>
 
 ### Tech Stack <a name="tech-stack"></a>
 
-> Describe the tech stack and include only the relevant sections that apply to your project.
+<!-- > Describe the tech stack and include only the relevant sections that apply to your project. -->
 
-<details>
+<!-- <details>
   <summary>Client</summary>
   <ul>
     <li><a href="https://reactjs.org/">React.js</a></li>
   </ul>
-</details>
+</details> -->
 
 <details>
   <summary>Server</summary>
@@ -89,22 +59,20 @@ For more information on the importance of a professional README for your reposit
   </ul>
 </details>
 
-<details>
+<!-- <details>
 <summary>Database</summary>
   <ul>
     <li><a href="https://www.postgresql.org/">PostgreSQL</a></li>
   </ul>
-</details>
+</details> -->
 
 <!-- Features -->
 
 ### Key Features <a name="key-features"></a>
 
-> Describe between 1-3 key features of the application.
-
-- **[key_feature_1]**
-- **[key_feature_2]**
-- **[key_feature_3]**
+- **[Send SMS with Twilio (or any provider)]**
+- **[Send emails]**
+- **[Send Push Notifications]**
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -112,9 +80,7 @@ For more information on the importance of a professional README for your reposit
 
 ## 🚀 Live Demo <a name="live-demo"></a>
 
-> Add a link to your deployed project.
-
-- [Live Demo Link](https://google.com)
+- [Live Demo Link](http://notification-alb-250089916.eu-north-1.elb.amazonaws.com:3000/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -122,83 +88,100 @@ For more information on the importance of a professional README for your reposit
 
 ## 💻 Getting Started <a name="getting-started"></a>
 
-> Describe how a new developer could make use of your project.
+> This guide helps you set up the Notification API locally using Docker or manually with Node.js.
 
 To get a local copy up and running, follow these steps.
 
 ### Prerequisites
 
-In order to run this project you need:
+Before you begin, make sure you have:
 
-<!--
-Example command:
-
-```sh
- gem install rails
-```
- -->
+- **[Node.js (v18+) and npm installed OR]**
+- **[Docker installed and running]**
+- **[Git ]**
 
 ### Setup
 
 Clone this repository to your desired folder:
 
-<!--
-Example commands:
-
 ```sh
-  cd my-folder
-  git clone git@github.com:myaccount/my-project.git
+git clone https://github.com/your-username/notification-api.git
+cd notification-api
+
 ```
---->
 
 ### Install
 
 Install this project with:
 
-<!--
-Example command:
+> Option 1 [With Docker -Recommended]
 
 ```sh
-  cd my-project
-  gem install
+docker build -t notification-app .
+docker run -p 3000:3000 notification-app
+
 ```
---->
+
+> Option 2 [Run with Node.js (Manual Setup)]
+
+```sh
+npm install
+
+```
 
 ### Usage
 
 To run the project, execute the following command:
 
-<!--
-Example command:
-
 ```sh
-  rails server
+npm run build   # Compile TypeScript
+npm start       # Start the compiled app
+
 ```
---->
 
 ### Run tests
 
 To run tests, run the following command:
 
-<!--
-Example command:
-
 ```sh
-  bin/rails test test/models/article_test.rb
+  npm test
 ```
---->
 
-### Deployment
+### API Endpoints
 
-You can deploy this project using:
+> GET / – Basic health check
 
-<!--
-Example:
+> POST /email – Send an email notification
+> Body:
 
-```sh
-
+```json
+{
+	"recipient": "you@example.com",
+	"subject": "Hello",
+	"body": "This is a test"
+}
 ```
- -->
+
+> POST /sms – Send an SMS notification
+> Body:
+
+```json
+{
+	"recipient": "+255...",
+	"message": "This is an SMS"
+}
+```
+
+> POST /PUSH – Send an PUSH notification
+> Body:
+
+```json
+{
+	"deviceToken": "xyz123",
+	"message": "Push content",
+	"title": "New Alert"
+}
+```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -206,18 +189,9 @@ Example:
 
 ## 👥 Authors <a name="authors"></a>
 
-> Mention all of the collaborators of this project.
-
-👤 **Author1**
+👤 **Mnemba Chambuya**
 
 - GitHub: [@githubhandle](https://github.com/githubhandle)
-- Twitter: [@twitterhandle](https://twitter.com/twitterhandle)
-- LinkedIn: [LinkedIn](https://linkedin.com/in/linkedinhandle)
-
-👤 **Author2**
-
-- GitHub: [@githubhandle](https://github.com/githubhandle)
-- Twitter: [@twitterhandle](https://twitter.com/twitterhandle)
 - LinkedIn: [LinkedIn](https://linkedin.com/in/linkedinhandle)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -226,11 +200,9 @@ Example:
 
 ## 🔭 Future Features <a name="future-features"></a>
 
-> Describe 1 - 3 features you will add to the project.
-
-- [ ] **[new_feature_1]**
-- [ ] **[new_feature_2]**
-- [ ] **[new_feature_3]**
+- [ ] **[Authentication & Authorization with keys and tokens]**
+- [ ] **[Versioning ]**
+- [ ] **[A test GUI]**
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -250,17 +222,7 @@ Feel free to check the [issues page](../../issues/).
 
 > Write a message to encourage readers to support your project
 
-If you like this project...
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- ACKNOWLEDGEMENTS -->
-
-## 🙏 Acknowledgments <a name="acknowledgements"></a>
-
-> Give credit to everyone who inspired your codebase.
-
-I would like to thank...
+If you like this project, please support it by giving a star⭐️
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -268,15 +230,9 @@ I would like to thank...
 
 ## ❓ FAQ (OPTIONAL) <a name="faq"></a>
 
-> Add at least 2 questions new developers would ask when they decide to use your project.
+- **[What is the purpose of this api?]**
 
-- **[Question_1]**
-
-  - [Answer_1]
-
-- **[Question_2]**
-
-  - [Answer_2]
+  - [The aim of this API, when it is finnished, is to provide an easy way for developers to add a notifications functionality into their apps with the most scalable and maintanable way possible.]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -285,7 +241,5 @@ I would like to thank...
 ## 📝 License <a name="license"></a>
 
 This project is [MIT](./LICENSE) licensed.
-
-_NOTE: we recommend using the [MIT license](https://choosealicense.com/licenses/mit/) - you can set it up quickly by [using templates available on GitHub](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/adding-a-license-to-a-repository). You can also use [any other license](https://choosealicense.com/licenses/) if you wish._
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
