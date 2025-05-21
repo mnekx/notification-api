@@ -191,8 +191,8 @@ To run tests, run the following command:
 
 👤 **Mnemba Chambuya**
 
-- GitHub: [@githubhandle](https://github.com/githubhandle)
-- LinkedIn: [LinkedIn](https://linkedin.com/in/linkedinhandle)
+- GitHub: [@githubhandle](https://github.com/mnekx)
+- LinkedIn: [LinkedIn](https://linkedin.com/in/mnemba-chambuya)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
