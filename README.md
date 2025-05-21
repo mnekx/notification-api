@@ -4,7 +4,7 @@
 <!--   <img src="murple_logo.png" alt="logo" width="140"  height="auto" /> -->
   <br/>
 
-  <h3><b>Notifications API README</b></h3>
+  <h3><b>Notifications API</b></h3>
 
 </div>
 
@@ -28,8 +28,7 @@
 - [🔭 Future Features](#future-features)
 - [🤝 Contributing](#contributing)
 - [⭐️ Show your support](#support)
-- [🙏 Acknowledgements](#acknowledgements)
-- [❓ FAQ (OPTIONAL)](#faq)
+- [❓ FAQ](#faq)
 - [📝 License](#license)
 
 <!-- PROJECT DESCRIPTION -->
@@ -71,8 +70,6 @@
 
 ### Key Features <a name="key-features"></a>
 
-> Describe between 1-3 key features of the application.
-
 - **[Send SMS with Twilio (or any provider)]**
 - **[Send emails]**
 - **[Send Push Notifications]**
@@ -82,8 +79,6 @@
 <!-- LIVE DEMO -->
 
 ## 🚀 Live Demo <a name="live-demo"></a>
-
-> Add a link to your deployed project.
 
 - [Live Demo Link](http://notification-alb-250089916.eu-north-1.elb.amazonaws.com:3000/)
 
@@ -118,6 +113,7 @@ cd notification-api
 ### Install
 
 Install this project with:
+
 > Option 1 [With Docker -Recommended]
 
 ```sh
@@ -147,7 +143,6 @@ npm start       # Start the compiled app
 
 To run tests, run the following command:
 
-
 ```sh
   npm test
 ```
@@ -157,34 +152,34 @@ To run tests, run the following command:
 > GET / – Basic health check
 
 > POST /email – Send an email notification
-Body:
+> Body:
 
 ```json
 {
-  "recipient": "you@example.com",
-  "subject": "Hello",
-  "body": "This is a test"
+	"recipient": "you@example.com",
+	"subject": "Hello",
+	"body": "This is a test"
 }
-
 ```
 
 > POST /sms – Send an SMS notification
-Body:
+> Body:
 
 ```json
 {
-  "recipient": "+255...",
-  "message": "This is an SMS"
+	"recipient": "+255...",
+	"message": "This is an SMS"
 }
+```
 
 > POST /PUSH – Send an PUSH notification
-Body:
+> Body:
 
 ```json
 {
-  "deviceToken": "xyz123",
-  "message": "Push content",
-  "title": "New Alert"
+	"deviceToken": "xyz123",
+	"message": "Push content",
+	"title": "New Alert"
 }
 ```
 
@@ -193,8 +188,6 @@ Body:
 <!-- AUTHORS -->
 
 ## 👥 Authors <a name="authors"></a>
-
-> Mention all of the collaborators of this project.
 
 👤 **Mnemba Chambuya**
 
@@ -206,8 +199,6 @@ Body:
 <!-- FUTURE FEATURES -->
 
 ## 🔭 Future Features <a name="future-features"></a>
-
-> Describe 1 - 3 features you will add to the project.
 
 - [ ] **[Authentication & Authorization with keys and tokens]**
 - [ ] **[Versioning ]**
@@ -231,25 +222,13 @@ Feel free to check the [issues page](../../issues/).
 
 > Write a message to encourage readers to support your project
 
-If you like this project...
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- ACKNOWLEDGEMENTS -->
-
-## 🙏 Acknowledgments <a name="acknowledgements"></a>
-
-> Give credit to everyone who inspired your codebase.
-
-I would like to thank...
+If you like this project, please support it by giving a star⭐️
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- FAQ (optional) -->
 
 ## ❓ FAQ (OPTIONAL) <a name="faq"></a>
-
-> Add at least 2 questions new developers would ask when they decide to use your project.
 
 - **[What is the purpose of this api?]**
 
