@@ -1,11 +1,12 @@
-import { Router } from "express";
+import { Router, Request, Response, NextFunction } from "express";
 import { PrismaClient } from "@prisma/client";
 import { hashPassword, comparePassword, generateToken } from "../utils/auth";
+import { registerValidationRules, loginValidationRules, validate } from "../middleware/validate";
 
 const router = Router();
 const prisma = new PrismaClient();
 
-router.post("/register", async (req, res) => {
+router.post("/register", registerValidationRules, validate, async (req: Request, res: Response) => {
 	const { username, email, password } = req.body;
 
 	try {
@@ -17,14 +18,14 @@ router.post("/register", async (req, res) => {
 				password: hashedPassword,
 			},
 		});
-
+		delete (user as {password?: string}).password; // Remove password from response
 		res.status(201).json({ message: "User created successfully", user });
 	} catch (error) {
 		res.status(500).json({ error: "Error creating user" });
 	}
 });
 
-router.post("/login", async (req: any, res: any) => {
+router.post("/login", loginValidationRules, validate,  async (req: any, res: any) => {
 	const { email, password } = req.body;
 
 	try {
