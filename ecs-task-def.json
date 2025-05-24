@@ -6,6 +6,10 @@
 			"name": "notification-container",
 			"image": "436471025548.dkr.ecr.eu-north-1.amazonaws.com/notification-app:latest",
 			"essential": true,
+			"environment": [
+				{ "name": "DATABASE_URL", "value": "file:./dev.db" },
+				{ "name": "JWT_SECRET", "value": "your-secret-key" }
+			],
 			"portMappings": [
 				{
 					"containerPort": 3000,
@@ -15,10 +19,7 @@
 			]
 		}
 	],
-	"environment": [
-		{ "name": "DATABASE_URL", "value": "file:./dev.db" },
-		{ "name": "JWT_SECRET", "value": "your-secret-key" }
-	],
+
 	"requiresCompatibilities": ["FARGATE"],
 	"cpu": "256",
 	"memory": "512",
