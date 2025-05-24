@@ -1,29 +1,30 @@
-# Use official Node.js image
+# 1. Use official Node.js image
 FROM node:18
 
-# Set working directory
+# 2. Set working directory
 WORKDIR /app
 
-# Copy package files first to leverage Docker cache
+# 3. Copy package files and install dependencies
 COPY package*.json ./
-
-# Install dependencies
 RUN npm ci
 
-# Copy the rest of the application
+# 4. Copy all application files including prisma schema
 COPY . .
 
-# Generate Prisma client
+# 5. Set ENV for Prisma to find the DB
+ENV DATABASE_URL="file:./dev.db"
+
+# 6. Generate Prisma client
 RUN npx prisma generate
 
-# Push schema to SQLite to ensure the database file exists
+# 7. Push schema to SQLite (creates dev.db)
 RUN npx prisma db push
 
-# Build TypeScript code
+# 8. Build the app
 RUN npm run build
 
-# Expose app port
+# 9. Expose port
 EXPOSE 3000
 
-# Start the application
+# 10. Start the app
 CMD ["node", "dist/app.js"]
