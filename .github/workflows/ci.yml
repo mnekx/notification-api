@@ -39,7 +39,7 @@ jobs:
         run: npx prisma generate
 
       - name: Apply Prisma Migrations
-        run: npx prisma migrate dev --name init --skip-seed --force
+        run: npx prisma migrate dev --name init --skip-seed
 
       - name: Build TypeScript
         run: npm run build
