@@ -16,32 +16,32 @@ app.get("/", (req, res) => {
 });
 // Define routes for different notification types
 
-app.post("/email", authMiddleware, (req, res) => {
+app.post("/email", authMiddleware, async (req, res) => {
 	const { recipient, subject, body } = req.body;
 	const emailNotification = NotificationFactory.createEmail(
 		recipient,
 		subject,
 		body
 	);
-	emailNotification.send();
+	await emailNotification.send();
 	res.send({ status: "Email sent" });
 });
 
-app.post("/sms", authMiddleware, (req, res) => {
+app.post("/sms", authMiddleware, async (req, res) => {
 	const { recipient, message } = req.body;
 	const smsNotification = NotificationFactory.createSMS(recipient, message);
-	smsNotification.send();
+	await smsNotification.send();
 	res.send({ status: "SMS sent" });
 });
 
-app.post("/push", authMiddleware, (req, res) => {
+app.post("/push", authMiddleware, async (req, res) => {
 	const { deviceToken, message, title } = req.body;
 	const pushNotification = NotificationFactory.createPush(
 		deviceToken,
 		message,
 		title
 	);
-	pushNotification.send();
+	await pushNotification.send();
 	res.send({ status: "Push notification sent" });
 });
 

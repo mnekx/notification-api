@@ -20,3 +20,28 @@ model User {
   password String
   createdAt DateTime @default(now())
 }
+
+model Notification {
+  id          String   @id @default(uuid())
+  type        NotificationType
+  recipient   String
+  subject     String?   // For emails
+  message     String
+  status      NotificationStatus @default(PENDING)
+  error       String?            // Error message if failed
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+enum NotificationType {
+  EMAIL
+  SMS
+  PUSH
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
