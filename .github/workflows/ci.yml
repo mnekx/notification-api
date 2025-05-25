@@ -17,7 +17,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: "18"
 
       - name: Cache node modules
         uses: actions/cache@v4
@@ -35,8 +35,14 @@ jobs:
           echo "DATABASE_URL=file:./dev.db" > .env
           echo "JWT_SECRET=testsecret" >> .env
 
+      - name: Use test database
+        run: cp .env.test .env
+
       - name: Generate Prisma Client
         run: npx prisma generate
+
+      - name: Push schema to test.db
+        run: npx prisma db push
 
       - name: Reset and migrate database (SQLite)
         run: npx prisma migrate reset --force --skip-seed
