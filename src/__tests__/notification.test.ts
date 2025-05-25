@@ -8,6 +8,14 @@ let token: string;
 beforeAll(async () => {
 	process.env.DATABASE_URL = "file:./test.db"; // Adjust the database URL as needed
 	await prisma.$connect();
+
+	// Apply schema to test.db
+	await prisma.$executeRawUnsafe(`PRAGMA foreign_keys=OFF`);
+	await prisma.$disconnect();
+	const { execSync } = require("child_process");
+	execSync("npx prisma db push"); // This will create the tables in test.db
+
+	await prisma.$connect();
 	await prisma.notification.deleteMany(); // Clear notifications before tests
 
 	// Create a test user and generate a token for authentication
@@ -33,13 +41,13 @@ afterAll(async () => {
 describe("Notification API", () => {
 	it("should create a new email notification", async () => {
 		const response = await request(app)
-        .post("/email")
-        .set("Authorization", `Bearer ${token}`)
-        .send({
-			recipient: "test@example.com",
-			subject: "Test Email",
-			body: "This is a test email notification.",
-		});
+			.post("/email")
+			.set("Authorization", `Bearer ${token}`)
+			.send({
+				recipient: "test@example.com",
+				subject: "Test Email",
+				body: "This is a test email notification.",
+			});
 		expect(response.status).toBe(200);
 		expect(response.body.status).toBe("Email sent");
 
@@ -51,12 +59,12 @@ describe("Notification API", () => {
 	});
 	it("should create a new SMS notification", async () => {
 		const response = await request(app)
-        .post("/sms")
-        .set("Authorization", `Bearer ${token}`)
-        .send({
-			recipient: "+1234567890",
-			message: "This is a test SMS notification.",
-		});
+			.post("/sms")
+			.set("Authorization", `Bearer ${token}`)
+			.send({
+				recipient: "+1234567890",
+				message: "This is a test SMS notification.",
+			});
 		expect(response.status).toBe(200);
 		expect(response.body.status).toBe("SMS sent");
 
@@ -68,13 +76,13 @@ describe("Notification API", () => {
 	});
 	it("should create a new push notification", async () => {
 		const response = await request(app)
-        .post("/push")
-        .set("Authorization", `Bearer ${token}`)
-        .send({
-			token: "device123",
-			message: "This is a test push notification.",
-			title: "Test Push",
-		});
+			.post("/push")
+			.set("Authorization", `Bearer ${token}`)
+			.send({
+				token: "device123",
+				message: "This is a test push notification.",
+				title: "Test Push",
+			});
 		expect(response.status).toBe(200);
 		expect(response.body.status).toBe("Push notification sent");
 		const notification = await prisma.notification.findFirst({
