@@ -4,7 +4,7 @@ import prisma from "../prisma";
 
 export class FirebasePushNotification extends Notification {
 	constructor(
-		private deviceToken: string,
+		private token: string,
 		private message: string,
 		private title: string,
 		sender: SendStrategy
@@ -16,11 +16,11 @@ export class FirebasePushNotification extends Notification {
 		try {
 			// Simulate sending a push notification by logging to console
 			console.log(
-				`Sending push notification to ${this.deviceToken}: ${this.title} - ${this.message}`
+				`Sending push notification to ${this.token}: ${this.title} - ${this.message}`
 			);
 
 			const data = {
-				deviceToken: this.deviceToken,
+				token: this.token,
 				title: this.title,
 				message: this.message,
 			};
@@ -30,7 +30,7 @@ export class FirebasePushNotification extends Notification {
 			prisma.notification.create({
 				data: {
 					type: "PUSH",
-					recipient: this.deviceToken,
+					recipient: this.token,
 					subject: this.title,
 					message: this.message,
 					status: "SENT",
@@ -42,7 +42,7 @@ export class FirebasePushNotification extends Notification {
 			prisma.notification.create({
 				data: {
 					type: "PUSH",
-					recipient: this.deviceToken,
+					recipient: this.token,
 					subject: this.title,
 					message: this.message,
 					status: "FAILED",

@@ -35,9 +35,9 @@ app.post("/sms", authMiddleware, async (req, res) => {
 });
 
 app.post("/push", authMiddleware, async (req, res) => {
-	const { deviceToken, message, title } = req.body;
+	const { token, message, title } = req.body;
 	const pushNotification = NotificationFactory.createPush(
-		deviceToken,
+		token,
 		message,
 		title
 	);
