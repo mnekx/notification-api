@@ -1,13 +1,3 @@
-import dotenv from "dotenv";
-dotenv.config({
-	path:
-		process.env.NODE_ENV === "test"
-			? ".env.test"
-			: process.env.NODE_ENV === "production"
-			? ".env.production"
-			: ".env",
-});
-
 import express from "express";
 import bodyParser from "body-parser";
 import { NotificationFactory } from "./factory/notification-factory";
