@@ -1,12 +1,14 @@
 import request from "supertest";
 import { PrismaClient } from "@prisma/client";
-import { app } from "../app"; // Adjust the import based on your app's structure
+import { config } from "dotenv";
+import app from "../app";
+config({ path: ".env.test" }); 
 const prisma = new PrismaClient();
 
 let token: string;
 
 beforeAll(async () => {
-	process.env.DATABASE_URL = "file:./test.db"; // Adjust the database URL as needed
+	process.env.DATABASE_URL = "file:./test.db"; 
 	await prisma.$connect();
 
 	// Apply schema to test.db

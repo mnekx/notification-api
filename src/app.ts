@@ -1,3 +1,13 @@
+import dotenv from "dotenv";
+dotenv.config({
+	path:
+		process.env.NODE_ENV === "test"
+			? ".env.test"
+			: process.env.NODE_ENV === "production"
+			? ".env.production"
+			: ".env",
+});
+
 import express from "express";
 import bodyParser from "body-parser";
 import { NotificationFactory } from "./factory/notification-factory";
@@ -12,7 +22,7 @@ app.use(bodyParser.json());
 app.use("/auth", userRoutes);
 
 app.get("/", (req, res) => {
-	res.send("Notification Service");
+	res.send("Healthy Notification Service");
 });
 // Define routes for different notification types
 
@@ -45,8 +55,4 @@ app.post("/push", authMiddleware, async (req, res) => {
 	res.send({ status: "Push notification sent" });
 });
 
-app.listen(port, () => {
-	console.log(`Notification service running at http://localhost:${port}`);
-});
-
-export { app };
+export default app;

@@ -12,7 +12,10 @@ RUN npm ci
 COPY . .
 
 # 5. Set ENV for Prisma to find the DB
-ENV DATABASE_URL="file:./dev.db"
+ENV NODE_ENV=production
+
+# Copy .env.production as .env
+COPY .env.production .env
 
 # 6. Generate Prisma client
 RUN npx prisma generate
@@ -27,4 +30,4 @@ RUN npm run build
 EXPOSE 3000
 
 # 10. Start the app
-CMD ["node", "dist/app.js"]
+CMD ["node", "dist/server.js"]
