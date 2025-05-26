@@ -11,6 +11,10 @@ RUN npm ci
 # 4. Copy all application files including prisma schema
 COPY . .
 
+# 5. Accept DATABASE_URL as build argument and set it as env var
+ARG DATABASE_URL
+ENV DATABASE_URL=$DATABASE_URL
+
 # 6. Generate Prisma client
 RUN npx prisma generate
 
