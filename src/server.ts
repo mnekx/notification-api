@@ -2,7 +2,15 @@
 import app from './app';
 import dotenv from 'dotenv';
 
-dotenv.config(); // Load .env.production in deploy, .env locally
+dotenv.config({
+	path:
+		process.env.NODE_ENV === "test"
+			? ".env.test"
+			: process.env.NODE_ENV === "production"
+			? ".env.production"
+			: ".env",
+});
+
 
 const PORT = process.env.PORT || 3000;
 
