@@ -8,4 +8,5 @@ module.exports = {
 	coverageDirectory: "coverage",
 	collectCoverageFrom: ["src/**/*.ts"],
 	verbose: false,
+	coveragePathIgnorePatterns: ["/node_modules/", "src/server.ts", "src/env.d.ts"],
 };

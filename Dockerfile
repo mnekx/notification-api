@@ -11,12 +11,6 @@ RUN npm ci
 # 4. Copy all application files including prisma schema
 COPY . .
 
-# 5. Set ENV for Prisma to find the DB
-ENV NODE_ENV=production
-
-# Copy .env.production as .env
-COPY .env.production .env
-
 # 6. Generate Prisma client
 RUN npx prisma generate
 

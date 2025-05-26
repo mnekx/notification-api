@@ -7,7 +7,7 @@
 			"image": "436471025548.dkr.ecr.eu-north-1.amazonaws.com/notification-app:latest",
 			"essential": true,
 			"environment": [
-				{ "name": "DATABASE_URL", "value": "file:./dev.db" },
+				{ "name": "DATABASE_URL", "value": "file:./prod.db" },
 				{ "name": "JWT_SECRET", "value": "your-secret-key" }
 			],
 			"portMappings": [
