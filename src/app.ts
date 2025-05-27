@@ -66,7 +66,7 @@ app.delete(
 );
 
 app.post(
-	"/notifications/:id",
+	"/notifications/:id/retry",
 	authMiddleware,
 	authorizeOwnerOrAdmin(async (req) => {
 		const notification = await prisma.notification.findUnique({

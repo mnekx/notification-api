@@ -39,5 +39,5 @@ export const retryNotification = async (
 		data: { status: "PENDING", error: null },
 	});
 
-	res.status(101).json(updated);
+	res.status(101).json({...updated, message: "Notification retried"});
 };
