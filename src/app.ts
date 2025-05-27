@@ -3,6 +3,13 @@ import bodyParser from "body-parser";
 import { NotificationFactory } from "./factory/notification-factory";
 import userRoutes from "./routes/user";
 import authMiddleware from "./middleware/auth";
+import {
+	deleteNotification,
+	listNotifications,
+	retryNotification,
+} from "./controllers/notification";
+import { authorizeOwnerOrAdmin } from "./middleware/authorize";
+import prisma from "./prisma";
 
 const app = express();
 const port = 3000;
@@ -44,5 +51,30 @@ app.post("/push", authMiddleware, async (req, res) => {
 	await pushNotification.send();
 	res.send({ status: "Push notification sent" });
 });
+
+app.get("/notifications", authMiddleware, listNotifications);
+app.delete(
+	"/notifications/:id",
+	authMiddleware,
+	authorizeOwnerOrAdmin(async (req) => {
+		const notification = await prisma.notification.findUnique({
+			where: { id: req.params.id },
+		});
+		return notification?.userId ?? undefined;
+	}),
+	deleteNotification
+);
+
+app.post(
+	"/notifications/:id",
+	authMiddleware,
+	authorizeOwnerOrAdmin(async (req) => {
+		const notification = await prisma.notification.findUnique({
+			where: { id: req.params.id },
+		});
+		return notification?.userId ?? undefined;
+	}),
+	retryNotification
+);
 
 export default app;
