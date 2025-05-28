@@ -9,6 +9,7 @@ export const listNotifications = async (req: Request, res: Response) => {
 		where,
 		orderBy: { createdAt: "desc" },
 	});
+	res.status(200).json(notifications);
 };
 
 export const deleteNotification = async (
@@ -39,5 +40,5 @@ export const retryNotification = async (
 		data: { status: "PENDING", error: null },
 	});
 
-	res.status(101).json({...updated, message: "Notification retried"});
+	res.status(200).json({ ...updated, message: "Notification retried" });
 };

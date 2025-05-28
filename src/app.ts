@@ -8,7 +8,7 @@ import {
 	listNotifications,
 	retryNotification,
 } from "./controllers/notification";
-import { authorizeOwnerOrAdmin } from "./middleware/authorize";
+import { authorizeAdmin, authorizeOwnerOrAdmin } from "./middleware/authorize";
 import prisma from "./prisma";
 
 const app = express();
@@ -16,12 +16,12 @@ const port = 3000;
 app.use(express.json());
 app.use(bodyParser.json());
 
-app.use("/auth", userRoutes);
 
 app.get("/", (req, res) => {
 	res.send("Healthy Notification Service");
 });
-// Define routes for different notification types
+
+app.use("/auth", userRoutes);
 
 app.post("/email", authMiddleware, async (req, res) => {
 	const { recipient, subject, body } = req.body;
@@ -76,5 +76,10 @@ app.post(
 	}),
 	retryNotification
 );
+
+app.get("/admin", authMiddleware, authorizeAdmin, (req, res) => {
+	res.status(200).json({ message: "Only admin functionality" });
+	return;
+});
 
 export default app;

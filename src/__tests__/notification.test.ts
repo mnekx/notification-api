@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 let token: string;
 
 beforeAll(async () => {
-	process.env.DATABASE_URL = "file:./test.db"; 
+	// process.env.DATABASE_URL = "file:./test.db"; 
 	await prisma.$connect();
 
 	// Apply schema to test.db

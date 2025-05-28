@@ -7,7 +7,7 @@ const router = Router();
 const prisma = new PrismaClient();
 
 router.post("/register", registerValidationRules, validate, async (req: Request, res: Response) => {
-	const { username, email, password } = req.body;
+	const { username, email, password, role } = req.body;
 
 	try {
 		const hashedPassword = hashPassword(password);
@@ -16,6 +16,7 @@ router.post("/register", registerValidationRules, validate, async (req: Request,
 				username,
 				email,
 				password: hashedPassword,
+				role: role || "USER", // Default to USER if no role is provided
 			},
 		});
 		delete (user as {password?: string}).password; // Remove password from response
@@ -43,7 +44,7 @@ router.post("/login", loginValidationRules, validate,  async (req: any, res: any
 			return res.status(401).json({ error: "Invalid credentials" });
 		}
 
-		const token = generateToken(user.id);
+		const token = generateToken(user.id, user.role);
 
 		res.status(200).json({ message: "Login successful", token });
 	} catch (error) {

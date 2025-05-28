@@ -6,7 +6,7 @@ export const authorizeAdmin = (
 	next: NextFunction
 ) => {
 	if (req.user?.role !== "ADMIN") {
-		return res.status(403).json({ message: "Admin access required." });
+		res.status(403).json({ message: "Admin access required." });
 	}
 	next();
 };
@@ -20,6 +20,8 @@ export const authorizeOwnerOrAdmin = (
 		next: NextFunction
 	): Promise<void | undefined> => {
 		const ownerId = await getOwnerId(req);
+
+		if(!ownerId) res.status(404).json({message: "Notification not found!"})
 
 		if (!req.user) {
 			res.status(401).json({ message: "Authentication required!" });

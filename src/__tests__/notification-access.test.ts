@@ -16,6 +16,33 @@ describe("Notification Access Tests", () => {
 
 	beforeAll(async () => {
 		await prisma.notification.deleteMany({});
+		await prisma.user.deleteMany({});
+
+		await prisma.user.createMany({
+			data: [
+				{
+					id: 1,
+					email: "user1@example.com",
+					role: "USER",
+					username: "user1",
+					password: "password1",
+				},
+				{
+					id: 2,
+					email: "user2@example.com",
+					role: "USER",
+					username: "user2",
+					password: "password2",
+				},
+				{
+					id: 3,
+					email: "admin@example.com",
+					role: "ADMIN",
+					username: "admin",
+					password: "adminpassword",
+				},
+			],
+		});
 
 		userToken = createToken(1, "USER");
 		otherUserToken = createToken(2, "USER");
@@ -45,9 +72,11 @@ describe("Notification Access Tests", () => {
 		otherUserNotificationId = otherNotification.id;
 	});
 
+	afterAll(async () => await prisma.$disconnect());
+
 	test("User can list their own notification", async () => {
 		const res = await request(app)
-			.get("notifications")
+			.get("/notifications")
 			.set("Authorization", `Bearer ${userToken}`);
 
 		expect(res.statusCode).toBe(200);
@@ -88,7 +117,7 @@ describe("Notification Access Tests", () => {
 
 	test("User can not retry other user's notification", async () => {
 		const res = await request(app)
-			.post(`/notificaitons/${otherUserNotificationId}/retry`)
+			.post(`/notifications/${otherUserNotificationId}/retry`)
 			.set("Authorization", `Bearer ${userToken}`);
 
 		expect(res.statusCode).toBe(403);
@@ -106,12 +135,12 @@ describe("Notification Access Tests", () => {
 		const res = await request(app)
 			.delete(`/notifications/${userNotificationId}`)
 			.set("Authorization", `Bearer ${userToken}`);
-		expect(res.statusCode).toBe(200);
+		expect(res.statusCode).toBe(204);
 	});
 
 	test("User cannot delete another user's notification", async () => {
 		const res = await request(app)
-			.delete(`/notification/${otherUserNotificationId}`)
+			.delete(`/notifications/${otherUserNotificationId}`)
 			.set("Authorization", `Bearer ${userToken}`);
 
 		expect(res.statusCode).toBe(403);
@@ -119,9 +148,62 @@ describe("Notification Access Tests", () => {
 
 	test("Admin can delete any notification", async () => {
 		const res = await request(app)
-			.delete(`/notification/${otherUserNotificationId}`)
+			.delete(`/notifications/${otherUserNotificationId}`)
 			.set("Authorization", `Bearer ${adminToken}`);
 
-            expect(res.statusCode).toBe(200);
+		expect(res.statusCode).toBe(204);
 	});
+
+	test("List without token should return 401", async () => {
+		const res = await request(app).get("/notifications");
+		expect(res.statusCode).toBe(401);
+	});
+
+	test("Retry without token should return 401", async () => {
+		const res = await request(app).post(
+			`/notifications/${userNotificationId}/retry`
+		);
+		expect(res.statusCode).toBe(401);
+	});
+
+	test("Delete without token should return 401", async () => {
+		const res = await request(app).delete(
+			`/notifications/${userNotificationId}`
+		);
+		expect(res.statusCode).toBe(401);
+	});
+
+	test("Delete a non-existing notification should return 404", async () => {
+		const res = await request(app)
+			.delete(`/notifications/non-existing-id`)
+			.set("Authorization", `Bearer ${userToken}`);
+		expect(res.statusCode).toBe(404);
+		expect(res.body).toEqual(
+			expect.objectContaining({ message: "Notification not found!" })
+		);
+	});
+
+	test("Use of invalid token should return 401", async () => {
+		const res = await request(app)
+			.get("/notifications")
+			.set("Authorization", `Bearer invalidtoken`);
+		expect(res.statusCode).toBe(401);
+	});
+
+	test("Admin with invalid user ID should return 403", async () => {
+		await prisma.user.deleteMany({ where: { id: 3 } }); // Delete admin user
+		const res = await request(app)
+			.get("/notifications")
+			.set("Authorization", `Bearer ${adminToken}`);
+		expect(res.statusCode).toBe(401);
+	});
+
+	test("User accessing ADMIN functionality should not be authorized!", async () => {
+		const res = await request(app)
+			.get("/admin")
+			.set("Authorization", `Bearer ${userToken}`);
+
+			expect(res.statusCode).toBe(403);
+			expect(res.body).toEqual(expect.objectContaining({message: "Admin access required."}))
+	}, 10000);
 });

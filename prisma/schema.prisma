@@ -20,6 +20,7 @@ model User {
   password     String
   createdAt    DateTime       @default(now())
   Notification Notification[]
+  role Role @default(USER)
 }
 
 model Notification {
@@ -46,4 +47,9 @@ enum NotificationStatus {
   PENDING
   SENT
   FAILED
+}
+
+enum Role {
+  USER
+  ADMIN
 }
