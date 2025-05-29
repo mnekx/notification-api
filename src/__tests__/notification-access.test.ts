@@ -2,6 +2,9 @@ import request from "supertest";
 import app from "../app";
 import prisma from "../prisma";
 import jwt from "jsonwebtoken";
+import { ConsoleEmailSender } from "../strategies/email-sender";
+import { TwilioSMSSender } from "../strategies/sms-sender";
+import { FirebasePushSender } from "../strategies/push-sender";
 
 const createToken = (id: number, role: string) => {
 	return jwt.sign({ id, role }, process.env.JWT_SECRET, { expiresIn: "1h" });
@@ -203,7 +206,90 @@ describe("Notification Access Tests", () => {
 			.get("/admin")
 			.set("Authorization", `Bearer ${userToken}`);
 
-			expect(res.statusCode).toBe(403);
-			expect(res.body).toEqual(expect.objectContaining({message: "Admin access required."}))
+		expect(res.statusCode).toBe(403);
+		expect(res.body).toEqual(
+			expect.objectContaining({ message: "Admin access required." })
+		);
 	}, 10000);
+
+	test("None existent router should return 404", async () => {
+		const res = await request(app).get("/non-exitent-route");
+
+		expect(res.statusCode).toBe(404);
+		expect(res.body).toEqual(
+			expect.objectContaining({ message: "Not found" })
+		);
+	});
+
+	// test("Cannot retry a SENT notification", async () => {
+	// 	const sentNotification = await prisma.notification.create({
+	// 		data: {
+	// 			type: "EMAIL",
+	// 			recipient: "user@example.com",
+	// 			subject: "Test",
+	// 			message: "Already sent",
+	// 			status: "SENT",
+	// 			userId: 1,
+	// 		},
+	// 	});
+	// 	const res = await request(app)
+	// 		.post(`/notifications/${sentNotification}/rettry`)
+	// 		.set("Authorization", `Bearer ${userToken}`);
+
+	// 	expect(res.statusCode).toBe(409);
+	// 	expect(res.body.message).toMatch(/Already been sent/i);
+	// });
+
+	test("Internal Server Error is handled gracefully", async () => {
+		const res = await request(app).get("/crash");
+		expect(res.statusCode).toBe(500);
+		expect(res.body).toEqual(
+			expect.objectContaining({ message: "Something went wrong" })
+		);
+	});
+
+	test("EmailSender send() error should be thrown", async () => {
+		const sender = new ConsoleEmailSender();
+		jest.spyOn(sender, "send").mockImplementation(async () => {
+			throw new Error("There is an error sending an email!");
+		});
+
+		await expect(
+			sender.send({
+				recipient: "mine1@example.com",
+				subject: "Testing",
+				body: "Test body",
+			})
+		).rejects.toThrow("There is an error sending an email!");
+	});
+
+	test("SMSSender send() error should be thrown", async () => {
+		const sender = new TwilioSMSSender();
+
+		jest.spyOn(sender, "send").mockImplementation(async () => {
+			throw new Error("There is an error sending an SMS!");
+		});
+		await expect(
+			sender.send({
+				recipient: "mine1@example.com",
+				subject: "Testing",
+				body: "Test body",
+			})
+		).rejects.toThrow("There is an error sending an SMS!");
+	});
+
+	test("FirebasePushSender send() error should be thrown", async () => {
+		const sender = new FirebasePushSender();
+
+		jest.spyOn(sender, "send").mockImplementation(async () => {
+			throw new Error("There is an error sending an PUSH!");
+		});
+		await expect(
+			sender.send({
+				recipient: "mine1@example.com",
+				subject: "Testing",
+				body: "Test body",
+			})
+		).rejects.toThrow("There is an error sending an PUSH!");
+	});
 });

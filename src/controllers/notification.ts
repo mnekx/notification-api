@@ -32,8 +32,15 @@ export const retryNotification = async (
 	const { id } = req.params;
 	const notification = await prisma.notification.findUnique({ where: { id } });
 
-	if (!notification)
+	if (!notification) {
 		res.status(404).json({ message: "Notification not found!" });
+		return;
+	}
+
+	if (notification?.status === "SENT") {
+		res.status(409).json({ message: "Already been sent" });
+		return;
+	}
 
 	const updated = await prisma.notification.update({
 		where: { id },
