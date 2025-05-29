@@ -14,23 +14,27 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  username String
-  email String @unique
-  password String
-  createdAt DateTime @default(now())
+  id           Int            @id @default(autoincrement())
+  username     String
+  email        String         @unique
+  password     String
+  createdAt    DateTime       @default(now())
+  Notification Notification[]
+  role Role @default(USER)
 }
 
 model Notification {
-  id          String   @id @default(uuid())
-  type        NotificationType
-  recipient   String
-  subject     String?   // For emails
-  message     String
-  status      NotificationStatus @default(PENDING)
-  error       String?            // Error message if failed
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id        String             @id @default(uuid())
+  userId    Int?
+  user      User?              @relation(fields: [userId], references: [id])
+  type      NotificationType
+  recipient String
+  subject   String? // For emails
+  message   String
+  status    NotificationStatus @default(PENDING)
+  error     String? // Error message if failed
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
 }
 
 enum NotificationType {
@@ -45,3 +49,7 @@ enum NotificationStatus {
   FAILED
 }
 
+enum Role {
+  USER
+  ADMIN
+}
